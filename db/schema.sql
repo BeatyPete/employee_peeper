@@ -1,16 +1,11 @@
 DROP DATABASE IF EXISTS ice_creamDB;
-CREATE DATABASE ice_creamDB;
-USE ice_creamDB;
+DROP DATABASE IF EXISTS employeeDB;
+CREATE DATABASE employeeDB;
+USE employeeDB;
 
-CREATE TABLE products
+CREATE TABLE departments
 (
-  id INT NOT NULL
-  AUTO_INCREMENT,
-  flavor VARCHAR
-  (45) NULL,
-  price DECIMAL
-  (10,2) NULL,
-  quantity INT NULL,
-  PRIMARY KEY
-  (id)
+  id INT NOT NULL AUTO_INCREMENT,
+  dep_name VARCHAR(45) NULL,
+  PRIMARY KEY (id)
 );
