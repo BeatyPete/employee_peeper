@@ -10,6 +10,15 @@ const allDepartments = () => {
     });
   };
 
+  const getDepId = department => {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT id FROM departments WHERE Dep_Name = '${department}'`, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
 const addDepartment = department => {
     connection.query(
       'INSERT INTO departments SET ?',
@@ -37,4 +46,4 @@ const deleteDepartment = department => {
     );
   };
   
-  module.exports = { allDepartments, addDepartment, deleteDepartment };
+  module.exports = { allDepartments, addDepartment, deleteDepartment, getDepId };

@@ -1,4 +1,4 @@
-INSERT INTO departments (dep_name)
+INSERT INTO departments (Dep_Name)
 VALUES ("vanilla"), 
     ("chocolate"), 
     ("strawberry");
