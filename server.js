@@ -1,32 +1,7 @@
-const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 
-// Creates the connection to database
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  // Your MySQL username
-  user: 'root',
-  // Your MySQL password
-  password: '$Doraemon4eva$',
-  database: 'employeeDB'
-});
-
-connection.connect(err => {
-  if (err) throw err;
-  console.log('connected as id ' + connection.threadId);
-  afterConnection();
-});
-
-afterConnection = () => {
-  /* connection.query('SELECT * FROM departments', function(err, res) {
-    if (err) throw err;
-    console.log(res);
-    connection.end();
-  }); */
-  startPrompt();
-};
+const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
 
 const questions = [];
 
@@ -42,14 +17,11 @@ const startPrompt = () => {
     ])
     .then(choice => {
         if (choice.add === 'View all departments') {
-          /* connection.query('SELECT * FROM departments', function(err, res) {
-            if (err) throw err;
-            console.table(res)
-          }); */
           allDepartments()
           .then( departments => {
             console.table(departments)
           })
+          .then(startPrompt)
         } else if (choice.add === 'Add new department') {
             addDepPrompt()
         } else if (choice.add === 'Delete department') {
@@ -60,17 +32,9 @@ const startPrompt = () => {
     })
 };
 
-const allDepartments = () => {
-  return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM departments', (err, res) => {
-        if (err) reject(err);
-        resolve(res);
-    });
-  });
-};
-
 const deleteDepPrompt = () => {
   let depNames = [];
+  
   allDepartments()
   .then( depData => {
     /* console.log(depData) */
@@ -78,7 +42,7 @@ const deleteDepPrompt = () => {
     depData.forEach( thing => {
       depNames.push(thing.Dep_Name)
     })
-    console.log(depNames)
+    
     return inquirer.prompt([
       {
         type: 'list',
@@ -89,8 +53,7 @@ const deleteDepPrompt = () => {
     ])
     .then( depName => deleteDepartment(depName.deleteDep))
   })
-  
-  /* .then(startPrompt) */
+  .then(startPrompt)
 };
 
 const addDepPrompt = () => {
@@ -98,7 +61,7 @@ const addDepPrompt = () => {
     {
       type: 'input',
       name: 'depName',
-      message: 'Enter the new daprtments name.',
+      message: 'Enter the new departments name.',
       validate: usageInput => {
         if (usageInput) {
           return true;
@@ -113,29 +76,4 @@ const addDepPrompt = () => {
   .then(startPrompt)
 };
 
-const addDepartment = department => {
-  connection.query(
-    'INSERT INTO departments SET ?',
-    {
-      dep_name: department.depName,
-    },
-    function(err, res) {
-      if (err) throw err;
-      console.log(res.affectedRows + ' department created!\n');
-    }
-  );
-};
-
-const deleteDepartment = department => {
-  console.log(`Deleting ${department}...\n`);
-  connection.query(
-    'DELETE FROM departments WHERE ?',
-    {
-      Dep_Name: department
-    },
-    function(err, res) {
-      if (err) throw err;
-      console.log(res.affectedRows + ' department deleted!\n');
-    }
-  );
-};
+startPrompt();
