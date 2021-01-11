@@ -3,8 +3,6 @@ const cTable = require('console.table');
 
 const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
 
-const questions = [];
-
 const startPrompt = () => {
     console.log('Employee Peeper');
     return inquirer.prompt([
@@ -34,11 +32,9 @@ const startPrompt = () => {
 
 const deleteDepPrompt = () => {
   let depNames = [];
-  
+
   allDepartments()
   .then( depData => {
-    /* console.log(depData) */
-    
     depData.forEach( thing => {
       depNames.push(thing.Dep_Name)
     })

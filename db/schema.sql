@@ -9,3 +9,11 @@ CREATE TABLE departments
   Dep_Name VARCHAR(45) NULL,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE roles (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  job_title VARCHAR(30) NOT NULL,
+  salary INT UNSIGNED,
+  department_id INTEGER,
+  CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
+);
