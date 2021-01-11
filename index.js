@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 
 const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
-const { allRoles, addRole, deleteRole } = require('./routes/roleRoutes')
+const { allRoles, addRole, deleteRole } = require('./routes/roleRoutes');
+const { allEmployees } = require('./routes/employeeRoutes');
 
 const startPrompt = () => {
     console.log('Employee Peeper');
@@ -11,7 +12,7 @@ const startPrompt = () => {
             type: 'list',
             name: 'add',
             message: 'What would yo like to do?.',
-            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'Exit']
+            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Exit']
         }
     ])
     .then(choice => {
@@ -31,6 +32,10 @@ const startPrompt = () => {
           addRolePrompt()
         } else if (choice.add === 'Delete role') {
           deleteRolePrompt()
+        } else if (choice.add === 'View all employees') {
+          allEmployees()
+          .then( employees => console.table(employees))
+          .then(startPrompt)
         } else {
             return;
         }
