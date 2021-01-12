@@ -22,11 +22,12 @@ Clone the repository from https://github.com/BeatyPete/employee_peeper
 
 ## Usage 
 
-Open the command line in the directory of the application and use 'npm install'. Then mysql -u root -p 
+Open the command line in the directory of the application and use 'npm install'. Then use 'npm run migrate' to initialize the database. 'node index' will start the program, and you will be prompted to select to modify or view departments, roles or employees. First fill out departments, then roles, then employees, or you can use 'npm run seed' to fill a dummy database.
 
 ## Tests
 
-Clone the repository and open the directory with the command line. Then you will be prompted to enter the project manager's info. Afterwards you can select to add either a manager or inter and enter their info. After each employees full info is submitted you will be prompted to either add another or finish building team to generate the index.html, which can be found in the dist folder.
+walkthrough video:
+https://drive.google.com/file/d/1Dj6cyt5nb10URf3VXDYAV_3SUsIeIEWA/view
 
 ## License
 
