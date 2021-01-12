@@ -3,7 +3,7 @@ const cTable = require('console.table');
 
 const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
 const { allRoles, addRole, deleteRole } = require('./routes/roleRoutes');
-const { allEmployees, addEmployee, updateEmployee } = require('./routes/employeeRoutes');
+const { allEmployees, addEmployee, updateEmployee, deleteEmployee } = require('./routes/employeeRoutes');
 
 const startPrompt = () => {
     console.log('Employee Peeper');
@@ -12,7 +12,7 @@ const startPrompt = () => {
             type: 'list',
             name: 'add',
             message: 'What would yo like to do?.',
-            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Add new employee', 'Updat an existing employee', 'Exit']
+            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Add new employee', 'Updat an existing employee', 'Delete employee', 'Exit']
         }
     ])
     .then(choice => {
@@ -40,6 +40,8 @@ const startPrompt = () => {
           addEmployeePrompt()
         } else if (choice.add === 'Updat an existing employee') {
           updateEmployeePrompt()
+        } else if (choice.add === 'Delete employee') {
+          deleteEmployeePrompt()
         } else {
             return;
         }
@@ -167,7 +169,6 @@ const addEmployeePrompt = () => {
     roleData.forEach( thing => {
       roleNames.push(thing.job_title)
     })
-    return roleNames;
   })
 
   allEmployees()
@@ -229,7 +230,6 @@ const updateEmployeePrompt = () => {
     roleData.forEach( thing => {
       roleNames.push(thing.job_title)
     })
-    /* return roleNames; */
   })
 
   allEmployees()
@@ -254,6 +254,28 @@ const updateEmployeePrompt = () => {
     .then(updateEmployee)
     .then(startPrompt)
   })
+};
+
+const deleteEmployeePrompt = () => {
+  let employeeNames = [];
+
+  allEmployees()
+  .then( employeeData => {
+    employeeData.forEach( thing => {
+      employeeNames.push(`${thing.first_name}` + ` ${thing.last_name}`)
+    })
+    
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'deleteEmployee',
+        message: 'Select an employee to delete.',
+        choices: employeeNames
+      }
+    ])
+    .then( employee => deleteEmployee(employee.deleteEmployee))
+  })
+  .then(startPrompt)
 };
 
 startPrompt();

@@ -78,4 +78,19 @@ const updateEmployee = employeeData => {
     })
 };
 
-module.exports = { allEmployees, addEmployee, updateEmployee };
+const deleteEmployee = employeeData => {
+    const employeeName = employeeData.split(' ')
+    console.log(`Deleting ${employeeName}...\n`);
+    connection.query(
+      'DELETE FROM employees WHERE ?',
+      {
+        last_name: employeeName[1]
+      },
+      function(err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + ' department deleted!\n');
+      }
+    );
+};
+
+module.exports = { allEmployees, addEmployee, updateEmployee, deleteEmployee };
