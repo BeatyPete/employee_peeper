@@ -38,8 +38,6 @@ const addEmployee = employeeData => {
       })
     getManagerId(employeeData.manager)
       .then( managerData => {
-          console.log(roleId)
-          console.log(managerData[0].id)
         connection.query(
             'INSERT INTO employees SET ?',
             {

@@ -1,3 +1,5 @@
+USE employeeDB;
+
 INSERT INTO departments (Dep_Name)
 VALUES ("vanilla"), 
     ("chocolate"), 
