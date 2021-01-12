@@ -15,6 +15,15 @@ const allRoles = () => {
     });
 };
 
+const getRoleId = role => {
+  return new Promise((resolve, reject) => {
+      connection.query(`SELECT id FROM roles WHERE job_title = '${role}'`, (err, res) => {
+          if (err) reject(err);
+          resolve(res);
+      });
+  });
+}
+
 const addRole = role => {
     /* query for id from department chosen from inquirer */
     getDepId(role.department)
@@ -48,4 +57,4 @@ const deleteRole = role => {
     );
 };
 
-module.exports = { allRoles, addRole, deleteRole };
+module.exports = { allRoles, addRole, deleteRole, getRoleId };

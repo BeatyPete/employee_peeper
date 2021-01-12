@@ -3,7 +3,7 @@ const cTable = require('console.table');
 
 const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
 const { allRoles, addRole, deleteRole } = require('./routes/roleRoutes');
-const { allEmployees } = require('./routes/employeeRoutes');
+const { allEmployees, addEmployee, updateEmployee } = require('./routes/employeeRoutes');
 
 const startPrompt = () => {
     console.log('Employee Peeper');
@@ -12,7 +12,7 @@ const startPrompt = () => {
             type: 'list',
             name: 'add',
             message: 'What would yo like to do?.',
-            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Exit']
+            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Add new employee', 'Updat an existing employee', 'Exit']
         }
     ])
     .then(choice => {
@@ -21,9 +21,9 @@ const startPrompt = () => {
           .then( departments => console.table(departments))
           .then(startPrompt)
         } else if (choice.add === 'Add new department') {
-            addDepPrompt()
+          addDepPrompt()
         } else if (choice.add === 'Delete department') {
-            deleteDepPrompt()
+          deleteDepPrompt()
         } else if (choice.add === 'View all roles') {
           allRoles()
           .then( roles => console.table(roles))
@@ -36,6 +36,10 @@ const startPrompt = () => {
           allEmployees()
           .then( employees => console.table(employees))
           .then(startPrompt)
+        } else if (choice.add === 'Add new employee') {
+          addEmployeePrompt()
+        } else if (choice.add === 'Updat an existing employee') {
+          updateEmployeePrompt()
         } else {
             return;
         }
@@ -152,6 +156,104 @@ const deleteRolePrompt = () => {
     .then( roleName => deleteRole(roleName.deleteRole))
   })
   .then(startPrompt)
+};
+
+const addEmployeePrompt = () => {
+  let roleNames = [];
+  let managerNames = [];
+
+  allRoles()
+  .then( roleData => {
+    roleData.forEach( thing => {
+      roleNames.push(thing.job_title)
+    })
+    return roleNames;
+  })
+
+  allEmployees()
+  .then( employeeData => {
+    employeeData.forEach( thing => {
+      managerNames.push(`${thing.first_name}` + ` ${thing.last_name}`)
+    })      
+    return inquirer.prompt([
+        {
+          type: 'input',
+          name: 'firstName',
+          message: 'Enter the employees first name.',
+          validate: usageInput => {
+            if (usageInput) {
+              return true;
+            } else {
+              console.log('Please enter a name!');
+              return false;
+            }
+          }
+        },
+        {
+          type: 'input',
+          name: 'lastName',
+          message: 'Enter the employees last name.',
+          validate: usageInput => {
+            if (usageInput) {
+              return true;
+            } else {
+              console.log('Please enter a name!');
+              return false;
+            }
+          }
+        },
+        {
+          type: 'list',
+          name: 'role',
+          message: 'Select this employees role.',
+          choices: roleNames
+        },
+        {
+          type: 'list',
+          name: 'manager',
+          message: 'Select this employees manager.',
+          choices: managerNames
+        }
+    ])
+    .then(addEmployee)
+    .then(startPrompt)
+  })
+};
+
+const updateEmployeePrompt = () => {
+  let roleNames = [];
+  let employeeNames = [];
+
+  allRoles()
+  .then( roleData => {
+    roleData.forEach( thing => {
+      roleNames.push(thing.job_title)
+    })
+    /* return roleNames; */
+  })
+
+  allEmployees()
+  .then( employeeData => {
+    employeeData.forEach( thing => {
+      employeeNames.push(`${thing.first_name}` + ` ${thing.last_name}`)
+    })      
+    return inquirer.prompt([
+        {
+          type: 'list',
+          name: 'employee',
+          message: 'Select which employee to update.',
+          choices: employeeNames
+        },
+        {
+          type: 'list',
+          name: 'role',
+          message: 'Select this employees new role.',
+          choices: roleNames
+        }
+    ])
+    .then(updateEmployee)
+    .then(startPrompt)
+  })
 };
 
 startPrompt();
