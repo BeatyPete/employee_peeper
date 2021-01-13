@@ -4,6 +4,7 @@ const cTable = require('console.table');
 const { allDepartments, addDepartment, deleteDepartment } = require('./routes/departmentRoutes');
 const { allRoles, addRole, deleteRole } = require('./routes/roleRoutes');
 const { allEmployees, addEmployee, updateEmployee, deleteEmployee } = require('./routes/employeeRoutes');
+const connection = require('./db/database');
 
 const startPrompt = () => {
     console.log('Employee Peeper');
@@ -12,38 +13,49 @@ const startPrompt = () => {
             type: 'list',
             name: 'add',
             message: 'What would yo like to do?.',
-            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Add new employee', 'Updat an existing employee', 'Delete employee', 'Exit']
+            choices: ['View all departments', 'Add new department', 'Delete department', 'View all roles', 'Add new role', 'Delete role', 'View all employees', 'Add new employee', 'Update an existing employee', 'Delete employee', 'Exit']
         }
     ])
     .then(choice => {
-        if (choice.add === 'View all departments') {
-          allDepartments()
-          .then( departments => console.table(departments))
-          .then(startPrompt)
-        } else if (choice.add === 'Add new department') {
-          addDepPrompt()
-        } else if (choice.add === 'Delete department') {
-          deleteDepPrompt()
-        } else if (choice.add === 'View all roles') {
-          allRoles()
-          .then( roles => console.table(roles))
-          .then(startPrompt)
-        } else if (choice.add === 'Add new role') {
-          addRolePrompt()
-        } else if (choice.add === 'Delete role') {
-          deleteRolePrompt()
-        } else if (choice.add === 'View all employees') {
-          allEmployees()
-          .then( employees => console.table(employees))
-          .then(startPrompt)
-        } else if (choice.add === 'Add new employee') {
-          addEmployeePrompt()
-        } else if (choice.add === 'Updat an existing employee') {
-          updateEmployeePrompt()
-        } else if (choice.add === 'Delete employee') {
-          deleteEmployeePrompt()
-        } else {
-            return;
+        switch (choice.add) {
+          case 'View all departments':
+            allDepartments()
+            .then( departments => console.table(departments))
+            .then(startPrompt)
+            break;
+          case 'Add new department': 
+            addDepPrompt()
+            break;
+          case 'Delete department': 
+            deleteDepPrompt()
+            break;
+          case 'View all roles':
+            allRoles()
+            .then( roles => console.table(roles))
+            .then(startPrompt)
+            break;
+          case 'Add new role':
+            addRolePrompt()
+            break;
+          case 'Delete role':
+            deleteRolePrompt()
+            break;
+          case 'View all employees':
+            allEmployees()
+            .then( employees => console.table(employees))
+            .then(startPrompt)
+            break;
+          case 'Add new employee':
+            addEmployeePrompt()
+            break;
+          case 'Update an existing employee':
+            updateEmployeePrompt()
+            break;
+          case 'Delete employee':
+            deleteEmployeePrompt()
+            break;
+          default:
+            connection.end()
         }
     })
 };
